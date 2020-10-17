@@ -27,7 +27,7 @@ export class Method extends BaseEntity {
   @Column()
   image: string;
 
-  @Column()
+  @Column({default:true})
   active: boolean;
 
   @Column()

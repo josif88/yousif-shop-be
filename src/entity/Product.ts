@@ -27,7 +27,7 @@ export class Product extends BaseEntity{
   @Column()
   description: string;
 
-  @Column()
+  @Column({default:true})
   active: boolean;
 
   @Column()

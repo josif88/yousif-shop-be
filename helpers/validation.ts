@@ -62,4 +62,56 @@ export default class Validation {
       type: "string",
     },
   });
+
+  /**
+   *
+   * @param must
+   */
+  static product = (must = true) => ({
+    name: {
+      presence: must,
+      type: "string",
+      length: { minimum: 1 },
+    },
+    price: {
+      presence: must,
+      type: "number",
+    },
+    image: {
+      presence: must,
+      type: "string",
+    },
+    description: {
+      presence: must,
+      type: "string",
+    },
+    category: {
+      presence: must,
+      type: "number",
+    },
+  });
+
+  static method = (must = true) => ({
+    title: {
+      presence: must,
+      type: "string",
+      length: { minimum: 1 },
+    },
+    min: {
+      presence: must,
+      type: "number",
+    },
+    max: {
+      presence: must,
+      type: "number",
+    },
+    url: {
+      presence: must,
+      type: "string",
+    },
+    image: {
+      presence: must,
+      type: "string",
+    },
+  });
 }

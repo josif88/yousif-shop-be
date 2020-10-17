@@ -58,11 +58,27 @@ router.get(
   }
 );
 
+router.post(
+  "/method",
+  auth,
+  async (req, res): Promise<object> => {
+    return MethodController.addMethod(req, res);
+  }
+);
+
 //get products by category id routes
 router.get(
   "/products/:id",
   async (req, res): Promise<object> => {
     return ProductController.getProductsById(req, res);
+  }
+);
+
+router.post(
+  "/product",
+  auth,
+  async (req, res): Promise<object> => {
+    return ProductController.addProduct(req, res);
   }
 );
 

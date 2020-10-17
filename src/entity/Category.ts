@@ -8,9 +8,8 @@ import {
 } from "typeorm";
 import { Product } from "./Product";
 
-
 @Entity("categories")
-export class Category extends BaseEntity{
+export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,6 +18,9 @@ export class Category extends BaseEntity{
 
   @Column()
   image: string;
+
+  @Column({ default: true })
+  active: boolean;
 
   @Column()
   @CreateDateColumn()

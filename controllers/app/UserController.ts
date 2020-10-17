@@ -4,6 +4,7 @@ import {
   okRes,
   generate4DigitCode,
   hashMyPassword,
+  comparePasswords,
 } from "../../helpers/tools";
 import * as jwt from "jsonwebtoken";
 import Validation from "../../helpers/validation";
@@ -83,9 +84,12 @@ export default class UserController {
       if (req.body.otp == user.otp) {
         //update his status on db
         await User.update(user, { complete: true, otp: 0 });
-        return okRes(res, user,);
+
+        //delete security fields
+        delete user.otp, user.complete, user.password;
+
+        return okRes(res, user);
       } else {
-        
         //tell user what he have done and send him a new otp sms, it costs money!
 
         //TODO: don't forget to send him an sms with new otp
@@ -96,7 +100,57 @@ export default class UserController {
         );
       }
     } catch (err) {
-      //something unexpected 
+      //something unexpected
+      return errRes(res, err);
+    }
+  }
+
+  static async login(req: Request, res: Response) {
+    //check user inputs
+    let isNotValid = validate(req.body, Validation.login());
+
+    if (isNotValid) return errRes(res, isNotValid);
+
+    //get inputs
+    let phone = req.body.phone;
+    let password = req.body.password;
+
+    //get user info from db
+    try {
+      const user = await User.findOne({
+        where: {
+          phone,
+        },
+      });
+
+      //check if user not active or his phone number not confirmed
+      if (user) {
+        if (!user.active) {
+          return errRes(res, "your account has been disabled");
+        } else if (!user.complete)
+          return errRes(res, "phone number not confirmed");
+  
+        //compare two the passwords if true give user a token
+        const result = await comparePasswords(password, user.password);
+
+        if (result) {
+          //remove sensitive information
+          delete user.password;
+          delete user.otp;
+
+          // assign new token
+          const token = jwt.sign({ id: user.id }, "password");
+
+          return okRes(res, { ...user, token });
+        }
+        //login failed
+        else return errRes(res, "password not matched");
+      }
+
+      // if phone number not match any user on the db
+      return errRes(res, "Not registered yet");
+    } catch (err) {
+      //something unexpected happened
       return errRes(res, err);
     }
   }

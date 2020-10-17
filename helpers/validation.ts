@@ -30,4 +30,36 @@ export default class Validation {
       length: { minimum: 4, maximum: 4 },
     },
   });
+
+  /**
+   *
+   * @param must
+   */
+  static login = (must = true) => ({
+    phone: {
+      presence: must,
+      length: { minimum: 10, maximum: 15 },
+    },
+    password: {
+      presence: must,
+      type: "string",
+      length: { minimum: 6, maximum: 15 },
+    },
+  });
+
+  /**
+   *
+   * @param must
+   */
+  static category = (must = true) => ({
+    title: {
+      presence: must,
+      type: "string",
+      length: { minimum: 1, maximum: 15 },
+    },
+    image: {
+      presence: must,
+      type: "string",
+    },
+  });
 }

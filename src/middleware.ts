@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { errRes } from "./helpers/tools";
+import { errRes } from "../helpers/tools";
 import * as jwt from "jsonwebtoken";
 
 export const notFound = (req: Request, res: Response, next) => {

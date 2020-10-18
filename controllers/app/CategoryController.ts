@@ -19,19 +19,18 @@ export default class CategoryController {
       //something unexpected
       return errRes(res, err);
     }
-
   }
 
   //get all active categories
   static async getCategories(req: Request, res: Response) {
-
     try {
       const categories = await Category.find({
         where: {
           active: true,
         },
+        relations: ["products"],
       });
-      
+
       return okRes(res, categories);
     } catch (err) {
       //something unexpected

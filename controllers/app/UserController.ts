@@ -12,6 +12,8 @@ import validate = require("validate.js");
 import * as PhoneFormat from "@solocreativestudio/phoneformatter";
 import { User } from "../../src/entity/User";
 
+import config from "../../config";
+
 export default class UserController {
   static async register(req: Request, res: Response) {
     let isValid = validate(req.body, Validation.register(true));
@@ -49,7 +51,7 @@ export default class UserController {
       user = await User.save(user);
 
       //generate encrypt token
-      user.token = jwt.sign({ id: user.id }, "password");
+      user.token = jwt.sign({ id: user.id }, config.jwtSecret);
 
       //hide his password hash
       delete user.password;
@@ -69,7 +71,10 @@ export default class UserController {
 
     try {
       //get payload from token
-      let payload: any = jwt.verify(req.headers.token.toString(), "password");
+      let payload: any = jwt.verify(
+        req.headers.token.toString(),
+        config.jwtSecret
+      );
 
       //find user based on his id from token payload
       let user = await User.findOne({ where: { id: payload.id } });
@@ -129,7 +134,7 @@ export default class UserController {
           return errRes(res, "your account has been disabled");
         } else if (!user.complete)
           return errRes(res, "phone number not confirmed");
-  
+
         //compare two the passwords if true give user a token
         const result = await comparePasswords(password, user.password);
 

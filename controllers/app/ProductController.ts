@@ -27,6 +27,7 @@ export default class CategoryController {
           active: true,
           category: req.params.id,
         },
+        relations:['category']
       });
 
       return okRes(res, products);

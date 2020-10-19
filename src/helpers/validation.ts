@@ -3,6 +3,27 @@ export default class Validation {
    *
    * @param must
    */
+  static changePassword = (must = true) => ({
+    currentPassword: {
+      presence: must,
+      type: "string",
+    },
+    newPassword: {
+      presence: must,
+      type: "string",
+      length: { minimum: 6, maximum: 15 },
+    },
+    confirmPassword: {
+      presence: must,
+      type: "string",
+      length: { minimum: 6, maximum: 15 },
+    },
+  });
+
+  /**
+   *
+   * @param must
+   */
   static register = (must = true) => ({
     name: {
       presence: must,

@@ -10,9 +10,9 @@ import * as jwt from "jsonwebtoken";
 import Validation from "../../helpers/validation";
 import validate = require("validate.js");
 import * as PhoneFormat from "@solocreativestudio/phoneformatter";
-import { User } from "../../src/entity/User";
+import { User } from "../../entity/User";
 
-import config from "../../config";
+import config from "../../../config";
 
 export default class UserController {
   static async register(req: Request, res: Response) {
@@ -157,6 +157,32 @@ export default class UserController {
     } catch (err) {
       //something unexpected happened
       return errRes(res, err);
+    }
+  }
+
+  static async changePassword(req: any, res: Response) {
+    //check user inputs
+    let validation = validate(req.body, Validation.changePassword());
+
+    if (validation) return errRes(res, validation);
+
+    //matching  passwords then hash
+    if (req.body.newPassword !== req.body.confirmPassword)
+      return errRes(res, "passwords not matched");
+    else if (
+      !(await comparePasswords(req.body.currentPassword, req.user.password))
+    )
+      return errRes(res, "current password not matched");
+    else {
+      req.body.newPassword = await hashMyPassword(req.body.newPassword);
+    }
+
+    try {
+      //update user password
+      User.update(req.user, { password: req.body.currentPassword });
+      return okRes(res, req.user);
+    } catch (err) {
+      return errRes(res, "server error");
     }
   }
 }

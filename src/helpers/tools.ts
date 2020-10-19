@@ -36,10 +36,7 @@ export const hashMyPassword = async (plainPassword) => {
   return password;
 };
 
-export const comparePasswords = async (
-  password: string,
-  storedPassword: string
-) => {
+export const comparePasswords = async (password: any, storedPassword: any) => {
   const result = await bcrypt.compare(password, storedPassword);
   return result;
 };

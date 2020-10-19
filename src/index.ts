@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { notFound } from "./middleware";
 import * as express from "express";
-import  v1 from "../route/app/v1";
+import  v1 from "./route/app/v1";
 
 createConnection().then(async (connection) => {
   const port = 5000;

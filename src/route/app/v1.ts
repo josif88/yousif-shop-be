@@ -3,7 +3,7 @@ import CategoryController from "../../controllers/app/CategoryController";
 import MethodController from "../../controllers/app/MethodController";
 import UserController from "../../controllers/app/UserController";
 import ProductController from "../../controllers/app/ProductController";
-import { auth } from "../../src/middleware";
+import { auth } from "../../middleware";
 
 const router = express.Router();
 
@@ -31,6 +31,14 @@ router.post(
   "/login",
   async (req, res): Promise<object> => {
     return UserController.login(req, res);
+  }
+);
+
+router.post(
+  "/password",
+  auth,
+  async (req, res): Promise<object> => {
+    return UserController.changePassword(req, res);
   }
 );
 

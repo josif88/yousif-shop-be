@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import validate = require("validate.js");
 import { errRes, okRes } from "../../helpers/tools";
 import Validation from "../../helpers/validation";
-import { Method } from "../../src/entity/Method";
+import { Method } from "../../entity/Method";
 
 export default class MethodController {
   //get all active methods

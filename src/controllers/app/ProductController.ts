@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import validate = require("validate.js");
 import { errRes, okRes } from "../../helpers/tools";
 import Validation from "../../helpers/validation";
-import { Category } from "../../src/entity/Category";
-import { Product } from "../../src/entity/Product";
+import { Category } from "../../entity/Category";
+import { Product } from "../../entity/Product";
 
 export default class CategoryController {
   //get all active products

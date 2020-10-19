@@ -11,8 +11,9 @@ import Validation from "../../helpers/validation";
 import validate = require("validate.js");
 import * as PhoneFormat from "@solocreativestudio/phoneformatter";
 import { User } from "../../entity/User";
-
 import config from "../../../config";
+import { Password } from "../../entity/Password";
+import { LessThan } from "typeorm";
 
 export default class UserController {
   static async register(req: Request, res: Response) {
@@ -173,16 +174,117 @@ export default class UserController {
       !(await comparePasswords(req.body.currentPassword, req.user.password))
     )
       return errRes(res, "current password not matched");
-    else {
-      req.body.newPassword = await hashMyPassword(req.body.newPassword);
-    }
 
     try {
       //update user password
-      User.update(req.user, { password: req.body.currentPassword });
+      User.update(req.user.id, {
+        password: await hashMyPassword(req.body.newPassword),
+      });
+      // remove sensitive data from user obj ;
+      delete req.user.password;
+
       return okRes(res, req.user);
     } catch (err) {
-      return errRes(res, "server error");
+      return errRes(res, "server error", 500);
+    }
+  }
+
+  static async forgetPassword(req: Request, res: Response) {
+    //check user phone validation
+    !PhoneFormat.getAllFormats(req.body.phone, "iq").isNumber &&
+      errRes(res, "please check your phone number");
+
+    //check user inputs
+    let validation = validate(req.body, Validation.forgetPassword());
+
+    if (validation) return errRes(res, validation);
+
+    //redirect user with a random generated string used as limited time reference and save it user passwords table
+    let randomString = require("randomstring");
+
+    try {
+      // get user obj from db
+      let user: any;
+      user = await User.findOne({ where: { phone: req.body.phone } });
+      console.log(user);
+
+      // if no phone associated with users
+      if (!user) return errRes(res, "User found");
+
+      let password = Password.create({
+        user: user.id,
+        otp: generate4DigitCode(),
+        reference: randomString.generate(64),
+      }).save();
+
+      // send sms to user with new otp
+
+      //email change password url with reference
+
+      // return reference code to user and redirect him to otp submit page
+      return okRes(res, {
+        reference: (await password).reference,
+        redirect: "/otp_submit",
+      });
+    } catch (err) {
+      return errRes(res, "server error", 500);
+    }
+  }
+
+  static async otpSubmit(req: Request, res: Response) {
+    //get reference code from url
+    let reference = req.params.reference;
+    if (!reference) {
+      return errRes(res, "Reference not found");
+    }
+
+    //check user inputs
+    let validation = validate(req.body, Validation.changePasswordByOtp());
+    if (validation) return errRes(res, validation);
+
+    //matching  passwords then hash
+    if (req.body.newPassword !== req.body.confirmPassword)
+      return errRes(res, "passwords not matched");
+
+    // find change password request reference in the db
+    try {
+      let password = await Password.findOne({
+        where: {
+          reference: req.params.reference,
+          confirmed: false,
+          tries: LessThan(3),
+        },
+      });
+
+      //TODO: check if password reference expired
+
+      if (!password) return errRes(res, "reference no valid");
+
+      //compare opt`s then hash new password
+      if (password.otp === req.body.otp) {
+        let passwordHash = await hashMyPassword(req.body.newPassword);
+
+        //change user password
+        let user: any;
+        user = await User.findOne(password.user);
+        user.password = passwordHash;
+        user.save();
+
+        // finish password reference request
+        password.otp = null;
+        password.confirmed = true;
+        password.changedAt = new Date();
+        password.save();
+
+        return okRes(res, "password changed successfully");
+      } else {
+        //increase  password tries counter by one
+        password.tries++;
+        password.save();
+        return errRes(res, "otp not correct");
+      }
+    } catch (err) {
+      return errRes(res, "server error", 500);
     }
   }
 }

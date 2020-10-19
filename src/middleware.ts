@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { errRes } from "./helpers/tools";
 import * as jwt from "jsonwebtoken";
 import { User } from "./entity/User";
+import config from "../config";
 
 export const notFound = (req: Request, res: Response, next) => {
   res.statusCode = 404;
@@ -20,7 +21,7 @@ export const auth = async (req, res, next): Promise<object> => {
 
   let payload: any;
   try {
-    payload = jwt.verify(token.toString(), "password");
+    payload = jwt.verify(token.toString(), config.jwtSecret);
   } catch (err) {
     errRes(res, "Token no valid");
   }

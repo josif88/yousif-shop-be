@@ -13,6 +13,7 @@ export const errRes = (res: Response, err, statusCode = 400) => {
   return res.json(response);
 };
 
+
 /**
  *
  * @param res

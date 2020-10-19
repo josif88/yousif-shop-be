@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Invoice } from "./Invoice";
 import { Notification } from "./Notification";
+import { Password } from "./Password";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -45,4 +46,7 @@ export class User extends BaseEntity {
 
   @OneToMany((type) => Notification, (notification) => notification.user)
   notifications: Notification[];
+
+  @OneToMany((type) => Password, (password) => password.user)
+  passwords: Password[];
 }

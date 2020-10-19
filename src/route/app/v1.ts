@@ -42,6 +42,20 @@ router.post(
   }
 );
 
+router.post(
+  "/forget",
+  async (req, res): Promise<object> => {
+    return UserController.forgetPassword(req, res);
+  }
+);
+
+
+router.post(
+  "/otp_submit/:reference",
+  async (req, res): Promise<object> => {
+    return UserController.otpSubmit(req, res);
+  }
+);
 //category routes
 router.post(
   "/category",

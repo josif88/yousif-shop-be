@@ -4,6 +4,7 @@ import MethodController from "../../controllers/app/MethodController";
 import UserController from "../../controllers/app/UserController";
 import ProductController from "../../controllers/app/ProductController";
 import { auth } from "../../middleware";
+import InvoiceController from "../../controllers/app/InvoiceController";
 
 const router = express.Router();
 
@@ -48,7 +49,6 @@ router.post(
     return UserController.forgetPassword(req, res);
   }
 );
-
 
 router.post(
   "/otp_submit/:reference",
@@ -101,6 +101,32 @@ router.post(
   auth,
   async (req, res): Promise<object> => {
     return ProductController.addProduct(req, res);
+  }
+);
+
+//invoice routes
+
+router.post(
+  "/invoice",
+  auth,
+  async (req, res): Promise<object> => {
+    return InvoiceController.addInvoice(req, res);
+  }
+);
+
+router.get(
+  "/invoice/:id",
+  auth,
+  async (req, res): Promise<object> => {
+    return InvoiceController.getInvoiceByID(req, res);
+  }
+);
+
+router.get(
+  "/invoices",
+  auth,
+  async (req, res): Promise<object> => {
+    return InvoiceController.getAllUserInvoices(req, res);
   }
 );
 

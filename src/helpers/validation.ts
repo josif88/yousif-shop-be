@@ -145,6 +145,44 @@ export default class Validation {
     },
   });
 
+  /**
+   *
+   * @param must
+   */
+  static invoice = (must = true) => ({
+    address: {
+      presence: must,
+      type: "string",
+    },
+    long: {
+      presence: must,
+      type: "string",
+    },
+    lat: {
+      presence: must,
+      type: "string",
+    },
+    method: {
+      presence: must,
+      type: "number",
+    },
+    invoiceItems: {
+      presence: must,
+      type: "array",
+    },
+  });
+
+  static invoiceItem = (must = true) => ({
+    quantity: {
+      presence: must,
+      type: "number",
+    },
+    product: {
+      presence: must,
+      type: "number",
+    },
+  });
+
   static method = (must = true) => ({
     title: {
       presence: must,

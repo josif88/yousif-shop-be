@@ -21,9 +21,9 @@ export const auth = async (req, res, next): Promise<object> => {
 
   let payload: any;
   try {
-    payload = jwt.verify(token.toString(), config.jwtSecret);
+    payload = jwt.verify(token, config.jwtSecret);
   } catch (err) {
-    errRes(res, "Token no valid");
+    return errRes(res, "Token no valid");
   }
 
   let user = await User.findOne({

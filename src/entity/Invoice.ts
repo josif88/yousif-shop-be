@@ -21,7 +21,7 @@ export class Invoice extends BaseEntity{
   @Column({ nullable: true })
   address: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true,default:"pending" })
   status: string;
 
   @Column({ nullable: true })
@@ -42,7 +42,6 @@ export class Invoice extends BaseEntity{
   updatedAt: Date;
 
   //relations
-
   @ManyToOne((type) => User, (user) => user.invoices)
   user: User;
 

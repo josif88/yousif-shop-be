@@ -145,7 +145,7 @@ export default class UserController {
           delete user.otp;
 
           // assign new token
-          const token = jwt.sign({ id: user.id }, "password");
+          const token = jwt.sign({ id: user.id }, config.jwtSecret);
 
           return okRes(res, { ...user, token });
         }
@@ -276,9 +276,12 @@ export default class UserController {
         password.changedAt = new Date();
         password.save();
 
-        return okRes(res, "password changed successfully");
+        return okRes(res, {
+          message: "password changed successfully",
+          redirect: "/login",
+        });
       } else {
-        //increase  password tries counter by one
+        //increase  password tries counter by one if user enter false otp
         password.tries++;
         password.save();
         return errRes(res, "otp not correct");

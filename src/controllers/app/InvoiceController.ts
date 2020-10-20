@@ -78,7 +78,7 @@ export default class InvoiceController {
         production: false,
         msisdn: "9647835077880",
         merchantId: "5dac4a31c98a8254092da3d8",
-        secret: "$2y$10$xlGUesweJh93EosHlaqMFeHh2nTOGxnGKILKCQvlSgKfmhoHzF12G",
+        secret: config.ZC_SECRET,
         lang: "ar",
       };
 
@@ -102,12 +102,13 @@ export default class InvoiceController {
 
   //get user invoice by id
   static async getInvoiceByID(req, res) {
-    const invoiceId = req.param.id;
+    let invoiceId = req.params.id;
 
     let invoice: Invoice;
     try {
       //get invoice from db
-      invoice = await Invoice.findOne(invoiceId, {
+      invoice = await Invoice.findOne({
+        where: { id: invoiceId },
         join: {
           alias: "invoice",
           leftJoinAndSelect: {
@@ -180,7 +181,7 @@ export default class InvoiceController {
           relations: ["user"],
         });
 
-        if (!invoice) return errRes(res, "Invoice already payed");
+        //if (!invoice) return errRes(res, "Invoice already payed");
 
         //change invoice status
         invoice.status = "payed";

@@ -362,13 +362,13 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTM4MjExfQ.mvjrSeYzguEs8-OoJcY75Td-rzsz80MGK5QzOvBcAng",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTkwNjkxfQ.GgGEjU2ZgOgFigamEEJE_klUMrEN13gOcSrMNWSFbOs",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"address\": \"address\",\r\n    \"long\": \"37.0002545745521\",\r\n    \"lat\": \"41.2545358\",\r\n    \"method\": 4,\r\n    \"invoiceItems\": [\r\n        {\r\n            \"product\": 3,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"product\": 4,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"address\": \"address\",\r\n    \"long\": \"37.0002545745521\",\r\n    \"lat\": \"41.2545358\",\r\n    \"method\": \"ZC\",\r\n    \"invoiceItems\": [\r\n        {\r\n            \"product\": 3,\r\n            \"quantity\": 1\r\n        }\r\n       \r\n    ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -455,7 +455,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5000/v1/payment_status?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI2IiwiaWQiOiI1ZjhlZTAzYzdmYzkyNmMxMjNhYjZiMmIiLCJvcGVyYXRpb25pZCI6IjQ5NzUxOSIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMxOTkxMzEsImV4cCI6MTYwMzIxMzUzMX0.oBWhhka187QSKr4rUZX_hH1TsMiXgLaRRCHkuj_UA-k",
+					"raw": "http://localhost:5000/v1/payment_status?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI4IiwiaWQiOiI1ZjhlZjg5YTdmYzkyNmMxMjNhYjZiMmUiLCJvcGVyYXRpb25pZCI6IjQ5NzU3MCIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMyMDUzMTgsImV4cCI6MTYwMzIxOTcxOH0.dleLcLoYYOy-rcodayw2RLWrDbfeXNgGuD-reIsusvo",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -468,7 +468,7 @@
 					"query": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI2IiwiaWQiOiI1ZjhlZTAzYzdmYzkyNmMxMjNhYjZiMmIiLCJvcGVyYXRpb25pZCI6IjQ5NzUxOSIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMxOTkxMzEsImV4cCI6MTYwMzIxMzUzMX0.oBWhhka187QSKr4rUZX_hH1TsMiXgLaRRCHkuj_UA-k"
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI4IiwiaWQiOiI1ZjhlZjg5YTdmYzkyNmMxMjNhYjZiMmUiLCJvcGVyYXRpb25pZCI6IjQ5NzU3MCIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMyMDUzMTgsImV4cCI6MTYwMzIxOTcxOH0.dleLcLoYYOy-rcodayw2RLWrDbfeXNgGuD-reIsusvo"
 						}
 					]
 				}

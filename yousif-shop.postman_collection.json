@@ -12,7 +12,7 @@
 				"header": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImlhdCI6MTYwMjg4OTMxMX0.DPk03W0bgAoOrqSgEaD8ytHRNRezUjkx3Ona93RmU9U",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTExMDYxfQ.6sHb3O5Rb55vkRW7E_qXLEWjBMi8JYI0bC8CVM2yBn0",
 						"type": "text"
 					},
 					{
@@ -24,7 +24,12 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"otp\":\"8338\"\r\n}"
+					"raw": "{\r\n    \"otp\":\"9854\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
 					"raw": "localhost:5000/v1/otp",
@@ -148,7 +153,8 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"phone\":\"07702992001\",\n\t\"password\":\"123456\"\n}"
+					"raw": "{\n\t\"phone\":\"07702992001\",\n\t\"password\":\"654321\"\n}",
+					"options": {}
 				},
 				"url": {
 					"raw": "127.0.0.1:5000/v1/login",
@@ -207,6 +213,263 @@
 						"v1",
 						"products",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjAyOTQxNzA4fQ.F6FXyrpeYg-5BMcAgwoyBFMjdBJ1mclV2Chet3jfTp0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"macbook 2019\",\r\n    \"price\": 1800,\r\n    \"description\": \"description\",\r\n    \"image\": \"imageUrl\",\r\n    \"category\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/v1/product",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "method",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTM4MjExfQ.mvjrSeYzguEs8-OoJcY75Td-rzsz80MGK5QzOvBcAng",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"On Delever\",\r\n    \"min\":0,\r\n    \"max\":10000000,\r\n    \"url\":\"url\",\r\n    \"image\":\"imageUrl\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/v1/method",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"method"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "forget",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"phone\": \"07702992001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/v1/forget",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"forget"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "otp_submit",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"otp\":2742,\r\n    \"newPassword\":\"654321\",\r\n    \"confirmPassword\":\"654321\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/v1/otp_submit/7m0uw6j1Q5LEMVlWgYNlw6DtzJmhsilWsgdX420JTaH8W6qtop0VxRHOWGBsiozy",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"otp_submit",
+						"7m0uw6j1Q5LEMVlWgYNlw6DtzJmhsilWsgdX420JTaH8W6qtop0VxRHOWGBsiozy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invoice",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTM4MjExfQ.mvjrSeYzguEs8-OoJcY75Td-rzsz80MGK5QzOvBcAng",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"address\": \"address\",\r\n    \"long\": \"37.0002545745521\",\r\n    \"lat\": \"41.2545358\",\r\n    \"method\": 4,\r\n    \"invoiceItems\": [\r\n        {\r\n            \"product\": 3,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"product\": 4,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/v1/invoice",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"invoice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "invoice by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTM4MjExfQ.mvjrSeYzguEs8-OoJcY75Td-rzsz80MGK5QzOvBcAng",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/v1/invoice/10",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"invoice",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user invoices",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjAzMTM4MjExfQ.mvjrSeYzguEs8-OoJcY75Td-rzsz80MGK5QzOvBcAng",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/v1/invoices",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"invoices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payed invoice",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/v1/payment_status?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI2IiwiaWQiOiI1ZjhlZTAzYzdmYzkyNmMxMjNhYjZiMmIiLCJvcGVyYXRpb25pZCI6IjQ5NzUxOSIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMxOTkxMzEsImV4cCI6MTYwMzIxMzUzMX0.oBWhhka187QSKr4rUZX_hH1TsMiXgLaRRCHkuj_UA-k",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"v1",
+						"payment_status"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGF0dXMiOiJzdWNjZXNzIiwib3JkZXJpZCI6IjI2IiwiaWQiOiI1ZjhlZTAzYzdmYzkyNmMxMjNhYjZiMmIiLCJvcGVyYXRpb25pZCI6IjQ5NzUxOSIsIm1zaXNkbiI6Ijk2NDc4MDY5OTkyNjciLCJpYXQiOjE2MDMxOTkxMzEsImV4cCI6MTYwMzIxMzUzMX0.oBWhhka187QSKr4rUZX_hH1TsMiXgLaRRCHkuj_UA-k"
+						}
 					]
 				}
 			},

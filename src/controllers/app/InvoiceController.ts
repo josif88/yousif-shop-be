@@ -82,8 +82,9 @@ export default class InvoiceController {
         lang: "ar",
       };
 
-      //save transaction id as to invoice as reference
+      //init ZC for testing propose
       let zc = new ZC(paymentData);
+      //save transaction id to invoice as reference
 
       invoice.transactionId = await zc.init();
       await invoice.save();
@@ -95,13 +96,11 @@ export default class InvoiceController {
       });
     } catch (err) {
       //something unexpected
-      console.log(err);
-
       return errRes(res, { message: "Server error", err }, 500);
     }
   }
 
-  //add invoice to db
+  //get user invoice by id
   static async getInvoiceByID(req, res) {
     const invoiceId = req.param.id;
 
@@ -133,7 +132,7 @@ export default class InvoiceController {
     }
   }
 
-  //add invoice to db
+  //get all user invoices
   static async getAllUserInvoices(req, res) {
     let invoices: Invoice[];
     try {
@@ -157,7 +156,7 @@ export default class InvoiceController {
       return okRes(res, invoices);
     } catch (err) {
       //server error
-      errRes(res, "server error", 500);
+      return errRes(res, "server error", 500);
     }
   }
 
@@ -165,12 +164,12 @@ export default class InvoiceController {
   static async invoicePayment(req, res) {
     //get token from url
     const token = req.query.token;
-    if (token) {
-      try {
-        var decoded: any = jwt.verify(token, config.ZC_SECRET);
-      } catch (err) {
-        errRes(res, "invalid token");
-      }
+
+    if (!token) return errRes(res, "token not found");
+
+    // describe token and extract data
+    try {
+      var decoded: any = jwt.verify(token, config.ZC_SECRET);
 
       if (decoded.status == "success") {
         var invoice = await Invoice.findOne({
@@ -178,24 +177,25 @@ export default class InvoiceController {
             transactionId: decoded.id,
             status: "pending",
           },
+          relations: ["user"],
         });
 
-        if (!invoice) errRes(res, "Invoice already payed");
+        if (!invoice) return errRes(res, "Invoice already payed");
 
         //change invoice status
         invoice.status = "payed";
         await invoice.save();
 
         return okRes(res, {
-          message: "invoice payed",
+          message: `thanks ${invoice.user.name} invoice payed successfully`,
           transactionId: decoded.id,
           invoice,
         });
       } else {
         return errRes(res, { message: decoded.msg, transactionId: decoded.id });
       }
-    } else {
-      errRes(res, "token not found");
+    } catch (err) {
+      return errRes(res, "invalid token");
     }
   }
 }

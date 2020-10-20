@@ -5,6 +5,9 @@ import Validation from "../../helpers/validation";
 import { Invoice } from "../../entity/Invoice";
 import { Product } from "../../entity/Product";
 import { InvoiceItem } from "../../entity/InvoiceItem";
+import * as jwt from "jsonwebtoken";
+import * as ZC from "zaincash";
+import config from "../../../config";
 
 export default class InvoiceController {
   //add invoice to db
@@ -63,11 +66,38 @@ export default class InvoiceController {
         await InvoiceItem.save(el);
       });
 
+      // init payment and add payment url of selected payment method to response body
+
+      // TODO: prepare payments data based on user selection
+
+      const paymentData = {
+        amount: invoice.total,
+        orderId: invoice.id.toString(),
+        serviceType: "Yousif Shop",
+        redirectUrl: "http://localhost:5000/v1/payment_status",
+        production: false,
+        msisdn: "9647835077880",
+        merchantId: "5dac4a31c98a8254092da3d8",
+        secret: "$2y$10$xlGUesweJh93EosHlaqMFeHh2nTOGxnGKILKCQvlSgKfmhoHzF12G",
+        lang: "ar",
+      };
+
+      //save transaction id as to invoice as reference
+      let zc = new ZC(paymentData);
+
+      invoice.transactionId = await zc.init();
+      await invoice.save();
+
       //response with full invoice detail
-      return okRes(res, invoice);
+      return okRes(res, {
+        paymentUrl: `https://test.zaincash.iq/transaction/pay?id=${invoice.transactionId}`,
+        invoice,
+      });
     } catch (err) {
       //something unexpected
-      return errRes(res, "Server error", 500);
+      console.log(err);
+
+      return errRes(res, { message: "Server error", err }, 500);
     }
   }
 
@@ -128,6 +158,44 @@ export default class InvoiceController {
     } catch (err) {
       //server error
       errRes(res, "server error", 500);
+    }
+  }
+
+  //handle invoice payments
+  static async invoicePayment(req, res) {
+    //get token from url
+    const token = req.query.token;
+    if (token) {
+      try {
+        var decoded: any = jwt.verify(token, config.ZC_SECRET);
+      } catch (err) {
+        errRes(res, "invalid token");
+      }
+
+      if (decoded.status == "success") {
+        var invoice = await Invoice.findOne({
+          where: {
+            transactionId: decoded.id,
+            status: "pending",
+          },
+        });
+
+        if (!invoice) errRes(res, "Invoice already payed");
+
+        //change invoice status
+        invoice.status = "payed";
+        await invoice.save();
+
+        return okRes(res, {
+          message: "invoice payed",
+          transactionId: decoded.id,
+          invoice,
+        });
+      } else {
+        return errRes(res, { message: decoded.msg, transactionId: decoded.id });
+      }
+    } else {
+      errRes(res, "token not found");
     }
   }
 }

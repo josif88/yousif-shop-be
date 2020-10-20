@@ -13,7 +13,7 @@ export default class MethodController {
           active: true,
         },
       });
-      console.table(methods);
+      
       return okRes(res, methods);
     } catch (err) {
       //something unexpected

@@ -164,7 +164,7 @@ export default class Validation {
     },
     method: {
       presence: must,
-      type: "number",
+      type: "string",
     },
     invoiceItems: {
       presence: must,

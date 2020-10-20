@@ -130,4 +130,11 @@ router.get(
   }
 );
 
+router.get(
+  "/payment_status",
+  async (req, res): Promise<object> => {
+    return InvoiceController.invoicePayment(req, res);
+  }
+);
+
 export default router;

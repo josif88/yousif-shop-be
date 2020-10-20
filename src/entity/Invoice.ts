@@ -11,7 +11,7 @@ import { InvoiceItem } from "./InvoiceItem";
 import { User } from "./User";
 
 @Entity("invoices")
-export class Invoice extends BaseEntity{
+export class Invoice extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,7 +21,7 @@ export class Invoice extends BaseEntity{
   @Column({ nullable: true })
   address: string;
 
-  @Column({ nullable: true,default:"pending" })
+  @Column({ nullable: true, default: "pending" })
   status: string;
 
   @Column({ nullable: true })
@@ -32,6 +32,9 @@ export class Invoice extends BaseEntity{
 
   @Column({ nullable: true })
   lat: string;
+
+  @Column({ nullable: true })
+  transactionId: string;
 
   @Column()
   @CreateDateColumn()

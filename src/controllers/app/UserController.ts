@@ -34,7 +34,6 @@ export default class UserController {
 
     //set formatted phone number to user
     userObj.phone = phoneNumber.globalZ;
-    console.log(phoneNumber.globalZ);
 
     //check if user phone no is used before
     user = await User.findOne({ where: { phone: req.body.phone } });
@@ -65,10 +64,11 @@ export default class UserController {
       delete user.password;
 
       // send user an sms with otp
-      sendOtp(phoneNumber.globalP, otp);
+      let smsStatus = await sendOtp(phoneNumber.globalP, otp);
+      
 
       //everything just ok show me the result
-      return okRes(res, user);
+      return okRes(res, { user, smsStatus });
     } catch (err) {
       errRes(res, err);
     }
@@ -111,7 +111,7 @@ export default class UserController {
         //TODO: don't forget to send him an sms with new otp //DONE!
         let otp = generate4DigitCode();
         let formattedPhone = PhoneFormat.getAllFormats(user.phone, "iq");
-        sendOtp(formattedPhone.globalP, otp);
+        let smsStatus = await sendOtp(formattedPhone.globalP, otp);
 
         User.update(user, { otp });
         return errRes(
@@ -235,14 +235,15 @@ export default class UserController {
       }).save();
 
       // send sms to user with new otp
-      sendOtp(phoneNumber.globalP, otp);
-      
+      let smsStatus = await sendOtp(phoneNumber.globalP, otp);
+
       //email change password url with reference
 
       // return reference code to user and redirect him to otp submit page
       return okRes(res, {
         reference: (await password).reference,
         redirect: "/otp_submit",
+        smsStatus,
       });
     } catch (err) {
       return errRes(res, "server error", 500);

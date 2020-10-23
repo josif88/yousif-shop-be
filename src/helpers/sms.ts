@@ -5,13 +5,16 @@ const authToken = config.AUTH_TOKEN;
 const senderPhone = config.TWILIO_PHONE_NUMBER;
 const client = require("twilio")(accountSid, authToken);
 
-export const sendOtp = (to: string, otp: number, from = senderPhone) => {
-  client.messages
-    .create({
+export const sendOtp = async (to: string, otp: number, from = senderPhone) => {
+  try {
+    let message = await client.messages.create({
       body: `Yousif Shop OTP code is: ${otp}`,
       from,
       to,
-    })
-    .then((message) => console.log(message.sid))
-    .done();
+    });
+
+    return message;
+  } catch (err) {
+    return err;
+  }
 };

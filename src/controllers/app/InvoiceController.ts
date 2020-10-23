@@ -74,10 +74,10 @@ export default class InvoiceController {
         amount: invoice.total,
         orderId: invoice.id.toString(),
         serviceType: "Yousif Shop",
-        redirectUrl: "http://localhost:5000/v1/payment_status",
+        redirectUrl: config.PAYMENT_REDIRECT_URL,
         production: false,
-        msisdn: "9647835077880",
-        merchantId: "5dac4a31c98a8254092da3d8",
+        msisdn: config.MSISD,
+        merchantId: config.MERCHANT_ID,
         secret: config.ZC_SECRET,
         lang: "ar",
       };

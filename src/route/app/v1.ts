@@ -132,6 +132,7 @@ router.get(
 
 router.get(
   "/payment_status",
+  auth,
   async (req, res): Promise<object> => {
     return InvoiceController.invoicePayment(req, res);
   }

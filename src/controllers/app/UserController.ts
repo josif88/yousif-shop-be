@@ -6,6 +6,7 @@ import {
   hashMyPassword,
   comparePasswords,
 } from "../../helpers/tools";
+import { sendOtp } from "../../helpers/sms";
 import * as jwt from "jsonwebtoken";
 import Validation from "../../helpers/validation";
 import validate = require("validate.js");
@@ -26,19 +27,25 @@ export default class UserController {
     let userObj = req.body;
 
     //check user phone validation
-    !PhoneFormat.getAllFormats(userObj.phone, "iq").isNumber &&
-      errRes(res, "please check your phone number");
+    let phoneNumber = PhoneFormat.getAllFormats(req.body.phone, "iq");
+    !phoneNumber.isNumber && errRes(res, "please check your phone number");
 
     let user: any;
+
+    //set formatted phone number to user
+    userObj.phone = phoneNumber.globalZ;
+    console.log(phoneNumber.globalZ);
 
     //check if user phone no is used before
     user = await User.findOne({ where: { phone: req.body.phone } });
     if (user) return errRes(res, `Phone ${userObj.phone} already exists`);
 
+    let otp = generate4DigitCode();
+
     //complete user object fields
     user = {
       ...userObj,
-      otp: generate4DigitCode(),
+      otp,
       active: true,
       complete: false,
       createdAt: new Date(),
@@ -56,6 +63,9 @@ export default class UserController {
 
       //hide his password hash
       delete user.password;
+
+      // send user an sms with otp
+      sendOtp(phoneNumber.globalP, otp);
 
       //everything just ok show me the result
       return okRes(res, user);
@@ -98,8 +108,12 @@ export default class UserController {
       } else {
         //tell user what he have done and send him a new otp sms, it costs money!
 
-        //TODO: don't forget to send him an sms with new otp
-        User.update(user, { otp: generate4DigitCode() });
+        //TODO: don't forget to send him an sms with new otp //DONE!
+        let otp = generate4DigitCode();
+        let formattedPhone = PhoneFormat.getAllFormats(user.phone, "iq");
+        sendOtp(formattedPhone.globalP, otp);
+
+        User.update(user, { otp });
         return errRes(
           res,
           `password not match, new otp has been sent to ${user.phone}`
@@ -118,14 +132,14 @@ export default class UserController {
     if (isNotValid) return errRes(res, isNotValid);
 
     //get inputs
-    let phone = req.body.phone;
+    let phoneNumber = PhoneFormat.getAllFormats(req.body.phone, "iq");
     let password = req.body.password;
 
     //get user info from db
     try {
       const user = await User.findOne({
         where: {
-          phone,
+          phone: phoneNumber.globalZ,
         },
       });
 
@@ -191,8 +205,10 @@ export default class UserController {
 
   static async forgetPassword(req: Request, res: Response) {
     //check user phone validation
-    !PhoneFormat.getAllFormats(req.body.phone, "iq").isNumber &&
-      errRes(res, "please check your phone number");
+
+    let phoneNumber = PhoneFormat.getAllFormats(req.body.phone, "iq");
+
+    !phoneNumber.isNumber && errRes(res, "please check your phone number");
 
     //check user inputs
     let validation = validate(req.body, Validation.forgetPassword());
@@ -205,20 +221,22 @@ export default class UserController {
     try {
       // get user obj from db
       let user: any;
-      user = await User.findOne({ where: { phone: req.body.phone } });
+      user = await User.findOne({ where: { phone: phoneNumber.globalZ } });
       console.log(user);
 
       // if no phone associated with users
       if (!user) return errRes(res, "User found");
 
+      let otp = generate4DigitCode();
       let password = Password.create({
         user: user.id,
-        otp: generate4DigitCode(),
+        otp,
         reference: randomString.generate(64),
       }).save();
 
       // send sms to user with new otp
-
+      sendOtp(phoneNumber.globalP, otp);
+      
       //email change password url with reference
 
       // return reference code to user and redirect him to otp submit page
@@ -257,7 +275,6 @@ export default class UserController {
       });
 
       //TODO: check if password reference expired
-
       if (!password) return errRes(res, "reference no valid");
 
       //compare opt`s then hash new password

@@ -33,12 +33,13 @@ export default class UserController {
     let user: any;
 
     //set formatted phone number to user
-    userObj.phone = phoneNumber.globalZ;
+    userObj.phone = phoneNumber.globalP;
 
     //check if user phone no is used before
     user = await User.findOne({ where: { phone: req.body.phone } });
     if (user) return errRes(res, `Phone ${userObj.phone} already exists`);
 
+    // prepare OTP
     let otp = generate4DigitCode();
 
     //complete user object fields
@@ -65,7 +66,6 @@ export default class UserController {
 
       // send user an sms with otp
       let smsStatus = await sendOtp(phoneNumber.globalP, otp);
-      
 
       //everything just ok show me the result
       return okRes(res, { user, smsStatus });
@@ -95,6 +95,10 @@ export default class UserController {
       // else, if he already verified then he should not be here
       else if (user.complete)
         return errRes(res, "User verification done before");
+      else if (user.otpTries > 2) {
+        await user.remove();
+        return errRes(res, "please register again");
+      }
 
       //checking his otp
       if (req.body.otp == user.otp) {
@@ -106,18 +110,10 @@ export default class UserController {
 
         return okRes(res, user);
       } else {
-        //tell user what he have done and send him a new otp sms, it costs money!
-
-        //TODO: don't forget to send him an sms with new otp //DONE!
-        let otp = generate4DigitCode();
-        let formattedPhone = PhoneFormat.getAllFormats(user.phone, "iq");
-        let smsStatus = await sendOtp(formattedPhone.globalP, otp);
-
-        User.update(user, { otp });
-        return errRes(
-          res,
-          `password not match, new otp has been sent to ${user.phone}`
-        );
+        //otp wrong increase tries by 1
+        ++user.otpTries;
+        await user.save();
+        return errRes(res, `OTP not match, ${4 - user.otpTries} tries left`);
       }
     } catch (err) {
       //something unexpected
@@ -139,7 +135,7 @@ export default class UserController {
     try {
       const user = await User.findOne({
         where: {
-          phone: phoneNumber.globalZ,
+          phone: phoneNumber.globalP,
         },
       });
 
@@ -221,7 +217,7 @@ export default class UserController {
     try {
       // get user obj from db
       let user: any;
-      user = await User.findOne({ where: { phone: phoneNumber.globalZ } });
+      user = await User.findOne({ where: { phone: phoneNumber.globalP } });
       console.log(user);
 
       // if no phone associated with users

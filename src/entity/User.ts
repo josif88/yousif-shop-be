@@ -27,6 +27,9 @@ export class User extends BaseEntity {
   @Column()
   otp: number;
 
+  @Column({ default: 0 })
+  otpTries: number;
+
   @Column()
   active: boolean;
 

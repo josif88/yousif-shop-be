@@ -181,7 +181,7 @@ export default class InvoiceController {
           relations: ["user"],
         });
 
-        //if (!invoice) return errRes(res, "Invoice already payed");
+        if (!invoice) return errRes(res, "Invoice already paid");
 
         //change invoice status
         invoice.status = "payed";

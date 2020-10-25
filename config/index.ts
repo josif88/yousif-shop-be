@@ -11,4 +11,5 @@ export default config = {
   ACCOUNT_SID: process.env.ACCOUNT_SID,
   AUTH_TOKEN: process.env.AUTH_TOKEN,
   TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
+  IMAGEBB: process.env.IMAGEBB,
 };

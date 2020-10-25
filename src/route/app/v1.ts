@@ -138,4 +138,13 @@ router.get(
   }
 );
 
+
+// product image upload
+router.post(
+  "/upload",
+  async (req, res): Promise<object> => {
+    return ProductController.upload(req, res);
+  }
+);
+
 export default router;

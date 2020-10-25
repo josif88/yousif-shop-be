@@ -4,6 +4,9 @@ import { errRes, okRes } from "../../helpers/tools";
 import Validation from "../../helpers/validation";
 import { Category } from "../../entity/Category";
 import { Product } from "../../entity/Product";
+import config from "../../../config";
+import * as imgbbUploader from "imgbb-uploader";
+import * as fs from "fs";
 
 export default class CategoryController {
   //get all active products
@@ -27,7 +30,7 @@ export default class CategoryController {
           active: true,
           category: req.params.id,
         },
-        relations:['category']
+        relations: ["category"],
       });
 
       return okRes(res, products);
@@ -51,6 +54,30 @@ export default class CategoryController {
       return okRes(res, product);
     } catch (err) {
       //something unexpected happened
+      return errRes(res, err);
+    }
+  }
+
+  //TODO: for testing propose
+  static async upload(req: any, res: Response) {
+    if (!req.files || Object.keys(req.files).length === 0) {
+      return errRes(res, "No files were uploaded.");
+    }
+
+    let uploadedFile = req.files.sampleFile;
+    let randomString = require("randomstring");
+    let temporaryPath = `uploads/${randomString.generate(5)}.jpg`;
+
+    // Use the mv() method to place the file somewhere on your server
+    try {
+      uploadedFile.mv(temporaryPath);
+
+      let imageUrl = await imgbbUploader(config.IMAGEBB, temporaryPath);
+
+      okRes(res, imageUrl);
+      await fs.unlinkSync(temporaryPath);
+      return;
+    } catch (err) {
       return errRes(res, err);
     }
   }

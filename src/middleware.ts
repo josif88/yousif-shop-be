@@ -4,6 +4,18 @@ import { errRes } from "./helpers/tools";
 import * as jwt from "jsonwebtoken";
 import { User } from "./entity/User";
 import config from "../config";
+import { i18n } from "./helpers/language";
+
+// language middleWare
+export const language = (req: Request, res: Response, next) => {
+  //check req query if has language preference if not set it back to english
+  if (req.query.lang) {
+    i18n.setLocale(req.query.lang);
+  } else {
+    i18n.setLocale("en");
+  }
+  next();
+};
 
 export const notFound = (req: Request, res: Response, next) => {
   res.statusCode = 404;

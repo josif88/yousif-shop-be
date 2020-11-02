@@ -15,6 +15,7 @@ import { User } from "../../entity/User";
 import config from "../../../config";
 import { Password } from "../../entity/Password";
 import { LessThan } from "typeorm";
+import {i18n} from "../../helpers/language";
 
 export default class UserController {
   static async register(req: Request, res: Response) {
@@ -28,7 +29,7 @@ export default class UserController {
 
     //check user phone validation
     let phoneNumber = PhoneFormat.getAllFormats(req.body.phone, "iq");
-    !phoneNumber.isNumber && errRes(res, "please check your phone number");
+    if (!phoneNumber.isNumber) return errRes(res, i18n.__("phone invalid",req.body.phone));
 
     let user: any;
 

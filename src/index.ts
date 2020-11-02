@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import { notFound } from "./middleware";
+import { language, notFound } from "./middleware";
 import * as express from "express";
 import * as fileUpload from "express-fileupload";
 import v1 from "./route/app/v1";
@@ -17,6 +17,9 @@ createConnection().then(async (connection) => {
       limits: { fileSize: 50 * 1024 * 1024 },
     })
   );
+
+  //language and local setter
+  app.use(language);
 
   //router
   app.use("/v1", v1);

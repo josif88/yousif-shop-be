@@ -3,6 +3,7 @@ import validate = require("validate.js");
 import { errRes, okRes } from "../../helpers/tools";
 import Validation from "../../helpers/validation";
 import { Category } from "../../entity/Category";
+import { Like, Raw } from "typeorm";
 
 export default class CategoryController {
   static async addCategory(req: Request, res: Response) {
@@ -23,13 +24,28 @@ export default class CategoryController {
 
   //get all active categories
   static async getCategories(req: Request, res: Response) {
+    // check if there search term
+
     try {
-      const categories = await Category.find({
-        where: {
-          active: true,
-        },
-        relations: ["products"],
-      });
+      let categories;
+      if (req.query.q) {
+        let searchTerm: any = req.query.q;
+
+        categories = await Category.find({
+          where: {
+            title: Raw((alias) => `${alias} ILIKE '%${searchTerm}%'`),
+            active: true,
+          },
+          relations: ["products"],
+        });
+      } else {
+        categories = await Category.find({
+          where: {
+            active: true,
+          },
+          relations: ["products"],
+        });
+      }
 
       return okRes(res, categories);
     } catch (err) {
